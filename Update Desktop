@@ -3,56 +3,66 @@ clear
 remove-item "C:\users\daryl\documents\excel documents\Desktop Console Applications\Desktop Console Applications.csv"
 get-childitem -Path "C:\users\Daryl\Desktop" | Export-Csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Desktop Console Applications.csv" -NoTypeInformation
 
+$Game_Console = import-csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Game Console.csv" 
+$Work_Console = import-csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Work Console.csv"
+$Programming_Console = import-csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Programming Console.csv"
+$All_Apps = import-csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\All Apps.csv"
+
+#Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Game Console.csv" -Value "Game Console"
+#Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Work Console.csv" -Value "Work Console"
+#Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Programming Console.csv" -Value "Programming Console"
+#Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\All Apps.csv" -Value "All Apps"
+
 $desktop = import-csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Desktop Console Applications.csv" | select -ExpandProperty PSChildName
-$All_Apps = import-csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Variables.csv"
-$Game_Console = $All_Apps."Game Console" |sort -Unique
-$Work_Console = $All_Apps."Work Console" |sort -Unique
-$Programming_Console = $All_Apps."Programming Console" |sort -Unique
+#$All_Apps = import-csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Variables.csv"
+#$Game_Console = $All_Apps."Game Console" |sort -Unique
+#$Work_Console = $All_Apps."Work Console" |sort -Unique
+#$Programming_Console = $All_Apps."Programming Console" |sort -Unique
 
 #Write-Output $Game_Console
 #Write-output "Next"
 #Write-Output $desktop 
-if($desktop.Contains("Game Console.lnk") -eq $false)
-{
-    #Write-Output "Found"
-    foreach($item in $desktop)
-    {
-        $column_number = 1
+$counter = 0 
+$arg = $true
+function update_all_apps{
+    
+    while($counter -ne 1){
 
-        if($Game_Console.contains($item) -eq $False)
+        if($desktop.Contains("Game Console.lnk") -eq $false)
         {
-            Write-Output $item
-            #Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Variables.csv" -Value "$(","*$column_number)$item"
-            
-            Write-Output "Success"
+            Write-Output "Game Console Found"
+            remove-item "C:\users\daryl\documents\excel documents\Desktop Console Applications\Game Console.csv"
+            Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Game Console.csv" -Value "Game Console"
+            Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Game Console.csv" -Value $desktop
+            Write-Output "Game Console Pass"
+        }
+        
+        elseif($desktop.Contains("Work Console.lnk") -eq $false)
+        {
+            Write-Output "Work Console Found"
+            remove-item "C:\users\daryl\documents\excel documents\Desktop Console Applications\Game Console.csv"
+            Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Work Console.csv" -Value "Work Console"
+            Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Work Console.csv" -Value $desktop
+            Write-Output "Work Console Pass"
+        }
+        elseif($desktop.Contains("Programming Console.lnk") -eq $false)
+        {
+            Write-Output "Programming Console Found"
+            remove-item "C:\users\daryl\documents\excel documents\Desktop Console Applications\Game Console.csv"
+            Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Programming Console.csv" -Value "Programming Console"
+            Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Programming Console.csv" -Value $desktop
+            Write-Output "Programming Console Pass"
         }
     }
-
-}
-#else{Write-Output "Not Found"}
-
-
-function null{
-$columns = "Game Console", "Programming Console", "Work Console"
-
-
-
-$var = @()
-$counter = 0
-foreach($column in $columns){$var+= $All_Apps.$column}
-
-$var = $var.Where({$_ -ne ""}) |sort -Unique
-
-#Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Variables.csv" 
-$counter = 1
-
-
-$first_col = $All_Apps."All Apps"
-
-#write-output $first_col
-foreach($item in $var)
-{
-    if($first_col.Contains($item) -eq $False){Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Variables.csv" -Value $item}
+    Write-output "All App Start"
+    remove-item "C:\users\daryl\documents\excel documents\Desktop Console Applications\All Apps.csv"
+    Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Programming Console.csv" -Value "All Apps"
+    Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Programming Console.csv" -Value $Game_Console
+    Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Programming Console.csv" -Value $Work_Console
+    Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Programming Console.csv" -Value $Programming_Console
+        
+    Write-Output "Finish"
+    $counter++
 }
 
-}
+update_all_apps
