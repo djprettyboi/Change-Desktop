@@ -1,0 +1,58 @@
+clear
+
+remove-item "C:\users\daryl\documents\excel documents\Desktop Console Applications\Desktop Console Applications.csv"
+get-childitem -Path "C:\users\Daryl\Desktop" | Export-Csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Desktop Console Applications.csv" -NoTypeInformation
+
+$desktop = import-csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Desktop Console Applications.csv" | select -ExpandProperty PSChildName
+$All_Apps = import-csv -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Variables.csv"
+$Game_Console = $All_Apps."Game Console" |sort -Unique
+$Work_Console = $All_Apps."Work Console" |sort -Unique
+$Programming_Console = $All_Apps."Programming Console" |sort -Unique
+
+#Write-Output $Game_Console
+#Write-output "Next"
+#Write-Output $desktop 
+if($desktop.Contains("Game Console.lnk") -eq $false)
+{
+    #Write-Output "Found"
+    foreach($item in $desktop)
+    {
+        $column_number = 1
+
+        if($Game_Console.contains($item) -eq $False)
+        {
+            Write-Output $item
+            #Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Variables.csv" -Value "$(","*$column_number)$item"
+            
+            Write-Output "Success"
+        }
+    }
+
+}
+#else{Write-Output "Not Found"}
+
+
+function null{
+$columns = "Game Console", "Programming Console", "Work Console"
+
+
+
+$var = @()
+$counter = 0
+foreach($column in $columns){$var+= $All_Apps.$column}
+
+$var = $var.Where({$_ -ne ""}) |sort -Unique
+
+#Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Variables.csv" 
+$counter = 1
+
+
+$first_col = $All_Apps."All Apps"
+
+#write-output $first_col
+foreach($item in $var)
+{
+    if($first_col.Contains($item) -eq $False){Add-Content -Path "C:\users\daryl\documents\excel documents\Desktop Console Applications\Variables.csv" -Value $item}
+}
+
+}
